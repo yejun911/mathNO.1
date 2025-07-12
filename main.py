@@ -1,22 +1,11 @@
-import streamlit as st
-import numpy as np
-import matplotlib.pyplot as plt
-
-st.set_page_config(layout="centered", page_title="Modified Exponential Function Plotter")
-
-st.title("수정된 지수 함수 그래프")
-st.write("`f(x) = a^b + c` 형태의 함수 그래프를 그려봅니다. (x 값은 결과에 영향을 미치지 않습니다.)")
-
-# --- 사용자 입력 ---
-st.sidebar.header("함수 파라미터 설정")
-a = st.sidebar.number_input("a 값 입력:", value=2.0, help="a 값입니다.")
-b = st.sidebar.number_input("b 값 입력:", value=3.0, help="b 값 (a의 지수)입니다.")
-c = st.sidebar.number_input("c 값 입력:", value=0.0, help="수직 이동을 결정하는 상수입니다.")
+# ... (previous code) ...
 
 # --- 함수 정의 (수정됨) ---
 # f(x) = a^b + c 로 변경
 def constant_function(x, a, b, c):
-    return a**b + c
+    # 여기서 핵심: x의 모든 요소에 대해 동일한 상수 값을 반환하도록 수정
+    # NumPy의 fill 함수를 사용하거나, 단순히 x의 shape에 맞춰 상수를 반환
+    return np.full_like(x, a**b + c) # x와 동일한 shape로 채워진 배열을 반환
 
 # --- x 값 범위 설정 ---
 st.sidebar.subheader("x축 범위 설정")
@@ -28,7 +17,7 @@ if x_min >= x_max:
 else:
     x = np.linspace(x_min, x_max, 400)
     # 수정된 함수 호출
-    y = constant_function(x, a, b, c)
+    y = constant_function(x, a, b, c) # 이제 y는 x와 같은 (400,) shape의 배열이 됩니다.
 
     # --- 그래프 그리기 ---
     fig, ax = plt.subplots(figsize=(10, 6))
