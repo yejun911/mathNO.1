@@ -1,13 +1,26 @@
-# ... (previous code) ...
+import streamlit as st
+import numpy as np
+import matplotlib.pyplot as plt
 
-# --- 함수 정의 (수정됨) ---
+st.set_page_config(layout="centered", page_title="Modified Exponential Function Plotter")
+
+st.title("수정된 지수 함수 그래프")
+st.write("`f(x) = a^b + c` 형태의 함수 그래프를 그려봅니다. (x 값은 결과에 영향을 미치지 않습니다.)")
+
+# --- 사용자 입력 ---
+st.sidebar.header("함수 파라미터 설정")
+a = st.sidebar.number_input("a 값 입력:", value=2.0, help="a 값입니다.")
+b = st.sidebar.number_input("b 값 입력:", value=3.0, help="b 값 (a의 지수)입니다.")
+c = st.sidebar.number_input("c 값 입력:", value=0.0, help="수직 이동을 결정하는 상수입니다.")
+
+# --- 함수 정의 ---
 # f(x) = a^b + c 로 변경
 def constant_function(x, a, b, c):
-    # 여기서 핵심: x의 모든 요소에 대해 동일한 상수 값을 반환하도록 수정
-    # NumPy의 fill 함수를 사용하거나, 단순히 x의 shape에 맞춰 상수를 반환
+    # x의 모든 요소에 대해 동일한 상수 값을 반환하도록 수정
     return np.full_like(x, a**b + c) # x와 동일한 shape로 채워진 배열을 반환
 
-# --- x 값 범위 설정 ---
+# --- x 값 범위 설정 (수정된 부분) ---
+# subheader를 sidebar에 표시하려면 이렇게 작성해야 합니다.
 st.sidebar.subheader("x축 범위 설정")
 x_min = st.sidebar.slider("x 최소값:", -10.0, 0.0, -5.0)
 x_max = st.sidebar.slider("x 최대값:", 0.0, 10.0, 5.0)
@@ -16,18 +29,16 @@ if x_min >= x_max:
     st.sidebar.error("오류: x 최소값은 x 최대값보다 작아야 합니다.")
 else:
     x = np.linspace(x_min, x_max, 400)
-    # 수정된 함수 호출
-    y = constant_function(x, a, b, c) # 이제 y는 x와 같은 (400,) shape의 배열이 됩니다.
+    y = constant_function(x, a, b, c)
 
     # --- 그래프 그리기 ---
     fig, ax = plt.subplots(figsize=(10, 6))
-    # 그래프 라벨도 변경
     ax.plot(x, y, label=f'f(x) = {a}^{b} + {c} = {a**b + c:.2f}', color='red')
     ax.set_title('상수 함수 그래프')
     ax.set_xlabel('x')
     ax.set_ylabel('f(x)')
-    ax.axhline(a**b + c, color='blue', linestyle='--', linewidth=0.8, label=f'y = {a**b + c:.2f}')  # y = 결과값 선 추가
-    ax.axvline(0, color='gray', linestyle='--', linewidth=0.8)  # y축
+    ax.axhline(a**b + c, color='blue', linestyle='--', linewidth=0.8, label=f'y = {a**b + c:.2f}')
+    ax.axvline(0, color='gray', linestyle='--', linewidth=0.8)
     ax.legend()
     ax.grid(True)
 
